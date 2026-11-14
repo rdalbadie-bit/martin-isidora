@@ -155,7 +155,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
   position: absolute;
   inset: 0;
   border-radius: 4px;
-  clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 50% 46%, 100% 0, 100% 100%, 0 100%);
   background: linear-gradient(170deg, var(--env) 0%, var(--env-2) 100%);
 }
 .folds { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -164,7 +164,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 9%;
+  bottom: 7%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -193,7 +193,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
   position: absolute;
   inset: 0;
   border-radius: 4px 4px 0 0;
-  clip-path: polygon(0 0, 100% 0, 50% 62%);
+  clip-path: polygon(0 0, 100% 0, 50% 53%);
   background: linear-gradient(180deg, var(--env-2), var(--env));
 }
 .env.flap-open .flap { transform: rotateX(180deg); }
@@ -202,7 +202,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
 .seal {
   position: absolute;
   left: 50%;
-  top: 62%;
+  top: 53%;
   z-index: 5;
   width: calc(var(--envw) * .19);
   min-width: 58px;
@@ -591,7 +591,7 @@ svg.sprig { display: block; flex: none; overflow: visible; }
       </div>
       <div class="env-front">
         <div class="env-front-shape">
-          <svg class="folds" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><polyline points="0,100 50,57 100,100"/></svg>
+          <svg class="folds" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><polyline points="0,100 50,49 100,100"/></svg>
           <div class="addressee">
             <span class="label" id="env-label" hidden>Para</span>
             <span class="to" id="env-to">Para ti</span>
@@ -638,7 +638,7 @@ svg.sprig { display: block; flex: none; overflow: visible; }
         <p class="label">Agregar a mi calendario</p>
         <div class="btn-row cal-row">
           <a class="btn btn-ground" id="cal-link" href="https://calendar.google.com/" target="_blank" rel="noopener">Google</a>
-          <a class="btn btn-ground" href="martin-isidora.ics" type="text/calendar">iPhone / Outlook</a>
+          <a class="btn btn-ground" href="martin-isidora.ics" type="text/calendar">iPhone</a>
         </div>
       </div>
     </section>
