@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Martin &amp; Isidora</title>
-<meta name="description" content="Te invitamos a nuestro matrimonio. Sábado 13 de marzo de 2027 · Parque Lo Arcaya, Pirque.">
+<meta name="description" content="Te invitamos a nuestro matrimonio. Sábado 10 de abril de 2027 · Parque Lo Arcaya, Pirque.">
 <meta name="theme-color" content="#2B4237">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CL">
 <meta property="og:url" content="https://rdalbadie-bit.github.io/martin-isidora/">
 <meta property="og:title" content="Martin &amp; Isidora · Nos casamos">
-<meta property="og:description" content="Sábado 13 de marzo de 2027 · Parque Lo Arcaya, Pirque. Abre la invitación y confirma tu asistencia.">
+<meta property="og:description" content="Sábado 10 de abril de 2027 · Parque Lo Arcaya, Pirque. Abre la invitación y confirma tu asistencia.">
 <meta property="og:image" content="https://rdalbadie-bit.github.io/martin-isidora/preview.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
@@ -587,7 +587,7 @@ svg.sprig { display: block; flex: none; overflow: visible; }
       <div class="letter" aria-hidden="true">
         <div class="sprig-pair" data-sprig="40"></div>
         <p class="letter-names">Martin <span>&amp;</span> Isidora</p>
-        <p class="letter-date">13 · 03 · 2027</p>
+        <p class="letter-date">10 · 04 · 2027</p>
       </div>
       <div class="env-front">
         <div class="env-front-shape">
@@ -608,7 +608,7 @@ svg.sprig { display: block; flex: none; overflow: visible; }
 
 <div class="wrap" id="page">
   <main>
-    <p class="proto"><span class="proto-tag">Vista previa</span> Fecha, horarios, teléfono y datos bancarios son de ejemplo.<a href="#familia-perez" id="proto-link">Ver como “Familia Pérez”</a></p>
+    <p class="proto"><span class="proto-tag">Vista previa</span> Horarios, teléfono y datos bancarios son de ejemplo. <a href="#familia-perez" id="proto-link">Ver como “Familia Pérez”</a></p>
 
     <section class="card hero" aria-labelledby="names">
       <div class="sprig-pair" data-sprig="110"></div>
@@ -616,10 +616,10 @@ svg.sprig { display: block; flex: none; overflow: visible; }
       <p class="label">Junto a sus familias</p>
       <h1 class="names" id="names"><span>Martin</span><span class="amp">&amp;</span><span>Isidora</span></h1>
       <p class="lead" data-s="tienen el agrado de invitarte a celebrar su matrimonio" data-p="tienen el agrado de invitarlos a celebrar su matrimonio">tienen el agrado de invitarte a celebrar su matrimonio</p>
-      <div class="date" role="img" aria-label="Sábado 13 de marzo">
+      <div class="date" role="img" aria-label="Sábado 10 de abril">
         <span class="date-side">Sábado</span>
-        <span class="date-day">13</span>
-        <span class="date-side">Marzo</span>
+        <span class="date-day">10</span>
+        <span class="date-side">Abril</span>
       </div>
       <p class="date-year">2027 · 17:00 HRS</p>
       <button type="button" class="btn" id="go-rsvp">Confirmar asistencia</button>
@@ -703,7 +703,7 @@ svg.sprig { display: block; flex: none; overflow: visible; }
     <section class="card card-left rsvp" id="confirmar" aria-labelledby="h-rsvp">
       <p class="label">Asistencia</p>
       <h2 class="h2" id="h-rsvp" data-s="Confirma tu asistencia" data-p="Confirmen su asistencia">Confirma tu asistencia</h2>
-      <p class="rsvp-lead"><span data-s="Por favor, responde antes del" data-p="Por favor, respondan antes del">Por favor, responde antes del</span> <strong>13 de febrero de 2027</strong>.</p>
+      <p class="rsvp-lead"><span data-s="Por favor, responde antes del" data-p="Por favor, respondan antes del">Por favor, responde antes del</span> <strong>10 de marzo de 2027</strong>.</p>
       <p class="seats" id="seats" hidden></p>
       <form id="rsvp-form" novalidate>
         <div class="field">
@@ -742,7 +742,7 @@ svg.sprig { display: block; flex: none; overflow: visible; }
   <footer class="foot">
     <div class="sprig-pair" data-sprig="84"></div>
     <p class="mono" aria-label="Martin e Isidora">M<span>&amp;</span>I</p>
-    <p class="foot-date">13 · 03 · 2027</p>
+    <p class="foot-date">10 · 04 · 2027</p>
     <p class="label">Comparte tus fotos con #MartinEIsidora</p>
   </footer>
 </div>
@@ -758,9 +758,9 @@ svg.sprig { display: block; flex: none; overflow: visible; }
 
   /* ===== Datos editables (todos de ejemplo por ahora) ===== */
   const CONFIG = {
-    fecha: '2027-03-13T17:00:00-03:00',
+    fecha: '2027-04-10T17:00:00-04:00',
     zonaHoraria: 'America/Santiago',
-    calendario: { inicio: '20270313T170000', fin: '20270314T040000' },
+    calendario: { inicio: '20270410T170000', fin: '20270411T040000' },
     lugar: { nombre: 'Parque Lo Arcaya', direccion: 'Av. Hernán Prieto 4829, Pirque, Región Metropolitana' },
     horaCeremonia: '17:00',
     whatsapp: '56900000000',
@@ -916,14 +916,14 @@ svg.sprig { display: block; flex: none; overflow: visible; }
     const L = [];
     if (d.asiste === 'si') {
       L.push(plural
-        ? '¡Hola, Martin e Isidora! Confirmamos nuestra asistencia a su matrimonio el sábado 13 de marzo.'
-        : '¡Hola, Martin e Isidora! Confirmo mi asistencia a su matrimonio el sábado 13 de marzo.');
+        ? '¡Hola, Martin e Isidora! Confirmamos nuestra asistencia a su matrimonio el sábado 10 de abril.'
+        : '¡Hola, Martin e Isidora! Confirmo mi asistencia a su matrimonio el sábado 10 de abril.');
       L.push('', 'Nombre: ' + (d.nombre || '—'), 'Personas: ' + d.personas);
       if (d.dieta) L.push('Alergias o dieta: ' + d.dieta);
     } else {
       L.push(plural
-        ? 'Hola, Martin e Isidora. Lamentablemente no podremos acompañarlos el sábado 13 de marzo.'
-        : 'Hola, Martin e Isidora. Lamentablemente no podré acompañarlos el sábado 13 de marzo.');
+        ? 'Hola, Martin e Isidora. Lamentablemente no podremos acompañarlos el sábado 10 de abril.'
+        : 'Hola, Martin e Isidora. Lamentablemente no podré acompañarlos el sábado 10 de abril.');
       L.push('', 'Nombre: ' + (d.nombre || '—'));
     }
     if (d.mensaje) L.push('', d.mensaje);
