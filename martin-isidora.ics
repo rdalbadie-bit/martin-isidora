@@ -1,22 +1,22 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Martin e Isidora//Invitacion//ES
+PRODID:-//Isidora y Martin//Invitacion//ES
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
 UID:matrimonio-martin-isidora-20270410@rdalbadie-bit.github.io
-DTSTAMP:20261113T120000Z
-DTSTART:20270410T210000Z
-DTEND:20270411T080000Z
-SUMMARY:Matrimonio de Martin e Isidora
+DTSTAMP:20261124T120000Z
+DTSTART:20270410T203000Z
+DTEND:20270411T070000Z
+SUMMARY:Matrimonio de Isidora y Martín
 LOCATION:Parque Lo Arcaya\, Av. Hernán Prieto 4829\, Pirque\, Región
   Metropolitana
-DESCRIPTION:Ceremonia a las 17:00 y celebración a continuación.
+DESCRIPTION:Toma tu lugar a las 16:30. Ceremonia a las 17:00.
  \nInvitación: https://rdalbadie-bit.github.io/martin-isidora/
 URL:https://rdalbadie-bit.github.io/martin-isidora/
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Mañana es el matrimonio de Martin e Isidora
+DESCRIPTION:Mañana es el matrimonio de Isidora y Martín
 TRIGGER:-P1D
 END:VALARM
 END:VEVENT
