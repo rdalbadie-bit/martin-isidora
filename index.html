@@ -69,6 +69,7 @@
   --wine: #6F1D2B;
   --wine-deep: #4A121D;
   --wine-hi: #8E3442;
+  --paper-2: #E6DFD1;
   --olive: #7B7D58;
   --olive-dark: #5F6143;
   --ink: #2E2426;
@@ -208,46 +209,138 @@ img { display: block; max-width: 100%; height: auto; }
   color: var(--ink-soft);
 }
 .cue svg { width: 18px; height: 18px; animation: bob 1.8s ease-in-out infinite; }
-.gate {
-  display: inline-flex;
+/* ---------- Sobre de entrada: el sello abre la invitación y enciende la música ---------- */
+.intro {
+  --envw: min(84vw, 380px);
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
-  margin-top: 30px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--wine);
-  font: inherit;
+  justify-content: center;
+  gap: 24px;
+  padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background-color: var(--wine-deep);
+  background-image: var(--grain-light), radial-gradient(110% 70% at 50% 45%, var(--wine-hi), var(--wine-deep) 75%);
+  color: var(--on-wine);
   cursor: pointer;
+  transition: opacity .9s ease, visibility .9s;
   -webkit-tap-highlight-color: transparent;
 }
-.gate .seal {
-  position: relative;
-  width: 74px;
-  height: 74px;
+.intro.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+.stage { padding-top: calc(var(--envw) * .4); }
+.env { position: relative; width: var(--envw); aspect-ratio: 3 / 2; perspective: 1400px; }
+.env-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background-color: var(--paper);
+  background-image: repeating-linear-gradient(90deg,
+    var(--olive) 0 11px, var(--paper) 11px 21px, var(--olive) 21px 34px, var(--paper) 34px 44px);
+  box-shadow: 0 34px 50px -24px rgba(0, 0, 0, .75);
+}
+.letter {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 4%;
+  height: 92%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding-top: 9%;
+  background: var(--white);
+  border-radius: 2px;
+  color: var(--ink);
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+  transition: transform 1.05s cubic-bezier(.22, .8, .24, 1);
+}
+.letter-names { font-family: var(--font-title); font-size: calc(var(--envw) * .085); line-height: 1.25; }
+.letter-date { font-family: var(--font-hand); font-size: calc(var(--envw) * .075); line-height: 1.1; color: var(--wine); }
+.env.letter-out .letter { transform: translateY(-56%); }
+.env-front { position: absolute; inset: 0; z-index: 3; filter: drop-shadow(0 -1px 1.5px rgba(0, 0, 0, .25)); pointer-events: none; }
+.env-front-shape {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  clip-path: polygon(0 0, 50% 46%, 100% 0, 100% 100%, 0 100%);
+  background-color: var(--paper);
+  background-image: var(--grain);
+}
+.folds { position: absolute; inset: 0; width: 100%; height: 100%; }
+.folds polyline { fill: none; stroke: rgba(46, 36, 38, .14); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.env-to {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 9%;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: calc(var(--envw) * .085);
+  color: var(--wine);
+}
+.flap {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  transform-origin: 50% 0;
+  transition: transform .8s cubic-bezier(.45, .05, .3, 1);
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .25));
+  pointer-events: none;
+}
+.flap-shape {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px 4px 0 0;
+  clip-path: polygon(0 0, 100% 0, 50% 53%);
+  background-color: var(--paper-2);
+  background-image: var(--grain);
+}
+.env.flap-open .flap { transform: rotateX(180deg); }
+.env.flap-back .flap { z-index: 1; }
+.env-seal {
+  position: absolute;
+  left: 50%;
+  top: 53%;
+  z-index: 5;
+  width: calc(var(--envw) * .2);
+  min-width: 60px;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
   display: grid;
   place-items: center;
+  padding: 0;
+  border: 0;
   border-radius: 48% 52% 50% 50% / 53% 47% 53% 47%;
   background: radial-gradient(circle at 34% 30%, var(--wine-hi), var(--wine) 55%, var(--wine-deep));
   color: var(--on-wine);
   font-family: var(--font-title);
-  font-size: 1.3rem;
-  box-shadow: inset 0 0 0 4px rgba(0, 0, 0, .14), inset 0 0 0 7px rgba(255, 255, 255, .08), 0 4px 10px rgba(30, 10, 15, .35);
+  font-size: max(1.1rem, calc(var(--envw) * .055));
+  box-shadow: inset 0 0 0 4px rgba(0, 0, 0, .14), inset 0 0 0 7px rgba(255, 255, 255, .08), 0 4px 10px rgba(0, 0, 0, .45);
+  cursor: pointer;
+  transition: transform .4s cubic-bezier(.5, 0, .75, 0), opacity .4s;
 }
-.gate .seal::after {
+.env-seal::after {
   content: "";
   position: absolute;
   inset: -7px;
-  border: 1px solid var(--wine);
+  border: 1px solid var(--paper);
   border-radius: 50%;
   opacity: 0;
   animation: halo 2.4s ease-out infinite;
 }
-@keyframes halo { 0% { transform: scale(.9); opacity: .7; } 100% { transform: scale(1.35); opacity: 0; } }
-.gate-text { font-family: var(--font-hand); font-size: 1.9rem; }
-.gate:focus-visible .seal { outline: 2px solid var(--wine); outline-offset: 5px; }
-.gate.opened { animation: away .45s ease forwards; }
-@keyframes away { to { opacity: 0; transform: scale(.85); } }
+@keyframes halo { 0% { transform: scale(.9); opacity: .8; } 100% { transform: scale(1.4); opacity: 0; } }
+.env-seal:focus-visible { outline: 2px solid var(--on-wine); outline-offset: 6px; }
+.env.opening .env-seal { transform: translate(-50%, -50%) scale(.5) rotate(-14deg); opacity: 0; }
+.env.opening .env-seal::after { animation: none; }
+.intro-hint { font-family: var(--font-hand); font-size: 2.1rem; line-height: 1.1; transition: opacity .4s; }
+.intro.is-opening .intro-hint { opacity: 0; }
 @keyframes bob { 50% { transform: translateY(5px); } }
 
 /* ---------- Plana 2: cuenta regresiva y lugar ---------- */
@@ -475,6 +568,27 @@ img { display: block; max-width: 100%; height: auto; }
   </defs>
 </svg>
 
+<div class="intro" id="intro">
+  <div class="stage">
+    <div class="env" id="env">
+      <div class="env-back"></div>
+      <div class="letter" aria-hidden="true">
+        <p class="letter-names">Isidora y Martín</p>
+        <p class="letter-date">10.04.2027</p>
+      </div>
+      <div class="env-front">
+        <div class="env-front-shape">
+          <svg class="folds" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><polyline points="0,100 50,49 100,100"/></svg>
+          <span class="env-to" aria-hidden="true">Para ti</span>
+        </div>
+      </div>
+      <div class="flap"><div class="flap-shape"></div></div>
+      <button type="button" class="env-seal" id="seal" aria-label="Abrir la invitación">I&amp;M</button>
+    </div>
+  </div>
+  <p class="intro-hint">Toca el sello para abrir</p>
+</div>
+
 <div class="app">
   <p class="proto"><b>Vista previa</b>Las fotos, el teléfono y los datos bancarios son de ejemplo.</p>
 
@@ -485,10 +599,6 @@ img { display: block; max-width: 100%; height: auto; }
     <p class="cover-date">10.04.2027</p>
     <h1 class="cover-title" id="titulo">¡Nos<br>Casamos!</h1>
     <p class="cover-names">Isidora y Martín</p>
-    <button type="button" class="gate" id="gate">
-      <span class="seal" aria-hidden="true">I&amp;M</span>
-      <span class="gate-text">Toca para abrir</span>
-    </button>
     <svg class="art tower" viewBox="0 0 170 152" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
       <use href="#coupe" x="65" y="35"/>
       <use href="#coupe" x="45" y="62"/><use href="#coupe" x="85" y="62"/>
@@ -497,7 +607,7 @@ img { display: block; max-width: 100%; height: auto; }
       <circle cx="80" cy="26" r="1.6"/><circle cx="88" cy="18" r="1.2"/><circle cx="92" cy="28" r="1.8"/><circle cx="84" cy="10" r="1"/>
       <path d="M58 22 l-4 -4 M112 22 l4 -4 M85 4 v-4"/>
     </svg>
-    <p class="cue" id="cue" aria-hidden="true" hidden>desliza
+    <p class="cue" aria-hidden="true">desliza
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
     </p>
   </section>
@@ -872,7 +982,7 @@ img { display: block; max-width: 100%; height: auto; }
   });
   update();
   /* ===== Música: archivo musica.mp3 (un archivo de audio suena aunque el iPhone esté en silencio) ===== */
-  const audio = $('bgm'), musicBtn = $('music-btn'), gate = $('gate'), cue = $('cue'), root = document.documentElement;
+  const audio = $('bgm'), musicBtn = $('music-btn'), intro = $('intro'), env = $('env'), root = document.documentElement;
   const GESTOS = ['click', 'touchend', 'keydown'];
   let opened = false, wantMusic = true, resumeOnShow = false;
   audio.volume = 0.8;
@@ -895,24 +1005,35 @@ img { display: block; max-width: 100%; height: auto; }
   });
   audio.addEventListener('pause', () => setBtn(false));
 
-  function openInvite() {
+  // Tocar el sello (o el sobre) lo abre: la carta sube, aparece la invitación y parte la música.
+  function reveal() {
+    intro.classList.add('gone');
+    root.classList.remove('locked');
+    setTimeout(() => { intro.hidden = true; }, reduce ? 0 : 950);
+  }
+  function openInvite(e) {
     if (opened) return;
     opened = true;
-    root.classList.remove('locked');
-    gate.classList.add('opened');
-    setTimeout(() => { gate.hidden = true; cue.hidden = false; }, reduce ? 0 : 450);
+    if (wantMusic && audio.paused) play(e && e.type ? 'sobre ' + e.type : 'sobre').catch(() => {});
+    intro.classList.add('is-opening');
+    if (reduce) { reveal(); return; }
+    env.classList.add('opening');
+    setTimeout(() => env.classList.add('flap-open'), 380);
+    setTimeout(() => env.classList.add('flap-back', 'letter-out'), 1180);
+    setTimeout(reveal, 2400);
   }
-  // Cualquier toque (o deslizar el dedo) abre la invitación y enciende la música.
+  intro.addEventListener('click', openInvite);
+  intro.addEventListener('touchend', openInvite);
+
+  // Respaldo: si el primer intento no logró sonar, cualquier toque siguiente vuelve a intentarlo.
   function onGesture(e) {
     if (e.target && e.target.closest && e.target.closest('#music-btn')) return;
-    openInvite();
     if (wantMusic && audio.paused) play(e.type).catch(() => {});
   }
   GESTOS.forEach(t => document.addEventListener(t, onGesture, true));
 
   musicBtn.addEventListener('click', () => {
-    openInvite();
-    if (audio.paused) { wantMusic = true; play().catch(() => {}); }
+    if (audio.paused) { wantMusic = true; play('botón').catch(() => {}); }
     else { wantMusic = false; audio.pause(); }
   });
   document.addEventListener('visibilitychange', () => {
@@ -920,10 +1041,8 @@ img { display: block; max-width: 100%; height: auto; }
     else if (resumeOnShow && wantMusic) { resumeOnShow = false; play().catch(() => {}); }
   });
 
-  // Los celulares no dejan sonar una página sin un toque. Se intenta igual al cargar:
-  // si el navegador lo permite, la invitación se abre sola con música.
+  // La invitación queda tapada por el sobre hasta tocar el sello.
   root.classList.add('locked');
-  play().then(openInvite).catch(() => { /* hace falta un toque: se muestra el sello */ });
 
 })();
 </script>
