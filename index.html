@@ -18,6 +18,45 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Invitación al matrimonio de Isidora y Martín">
 <meta name="twitter:card" content="summary_large_image">
+<script>
+/* Diagnóstico: abrir con ?diag para ver en pantalla el estado de la música y los errores. */
+(function () {
+  if (!/[?&]diag\b/.test(location.search)) return;
+  var errs = [];
+  window.__diag = { last: '—' };
+  window.addEventListener('error', function (e) { errs.push((e.message || 'error') + ' (línea ' + (e.lineno || '?') + ')'); });
+  document.addEventListener('DOMContentLoaded', function () {
+    var box = document.createElement('div');
+    box.style.cssText = 'position:fixed;left:8px;right:8px;top:8px;z-index:99999;background:#111;color:#7CFC7C;font:12px/1.45 monospace;padding:10px;border-radius:8px;white-space:pre-wrap;word-break:break-word;opacity:.94';
+    var txt = document.createElement('div');
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = 'Probar sonido';
+    btn.style.cssText = 'display:block;margin-top:8px;font:15px sans-serif;padding:10px 16px;border-radius:6px;border:0;background:#7CFC7C;color:#111';
+    box.appendChild(txt); box.appendChild(btn); document.body.appendChild(box);
+    btn.addEventListener('click', function () {
+      var a = document.getElementById('bgm');
+      try {
+        var r = a.play();
+        window.__diag.last = 'botón de prueba: play() llamado';
+        if (r && r.then) r.then(function () { window.__diag.last = 'botón de prueba: play() OK'; },
+                                function (err) { window.__diag.last = 'botón de prueba: ' + err.name + ' ' + err.message; });
+      } catch (err) { window.__diag.last = 'botón de prueba: excepción ' + err.name; }
+    });
+    setInterval(function () {
+      var a = document.getElementById('bgm');
+      txt.textContent = [
+        'Navegador: ' + navigator.userAgent,
+        'Invitación abierta: ' + (document.documentElement.classList.contains('locked') ? 'NO' : 'sí'),
+        a ? ('Música: ' + (a.paused ? 'PAUSADA' : 'sonando') + ' · tiempo ' + a.currentTime.toFixed(1) + ' s · carga ' + a.readyState + '/4 · red ' + a.networkState + ' · error ' + (a.error ? a.error.code : 'no') + ' · silenciada ' + (a.muted ? 'sí' : 'no'))
+          : 'Música: no existe el elemento de audio',
+        'Último intento: ' + window.__diag.last,
+        'Errores: ' + (errs.length ? errs.join(' | ') : 'ninguno')
+      ].join('\n');
+    }, 500);
+  });
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dawning+of+a+New+Day&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=La+Belle+Aurore&display=swap">
@@ -841,11 +880,14 @@ img { display: block; max-width: 100%; height: auto; }
     musicBtn.setAttribute('aria-pressed', String(isOn));
     musicBtn.setAttribute('aria-label', isOn ? 'Pausar música' : 'Activar música');
   }
-  function play() {
+  function play(origen) {
+    const nota = m => { if (window.__diag) window.__diag.last = (origen || 'carga') + ': ' + m; };
     try {
       const p = audio.play();
-      return p && p.then ? p : Promise.resolve();
-    } catch (e) { return Promise.reject(e); }
+      const pr = p && p.then ? p : Promise.resolve();
+      pr.then(() => nota('play() OK'), err => nota((err && err.name) + ' ' + ((err && err.message) || '')));
+      return pr;
+    } catch (e) { nota('excepción ' + e.name); return Promise.reject(e); }
   }
   audio.addEventListener('playing', () => {
     setBtn(true);
@@ -864,7 +906,7 @@ img { display: block; max-width: 100%; height: auto; }
   function onGesture(e) {
     if (e.target && e.target.closest && e.target.closest('#music-btn')) return;
     openInvite();
-    if (wantMusic && audio.paused) play().catch(() => {});
+    if (wantMusic && audio.paused) play(e.type).catch(() => {});
   }
   GESTOS.forEach(t => document.addEventListener(t, onGesture, true));
 
