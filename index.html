@@ -664,6 +664,7 @@ img { display: block; max-width: 100%; height: auto; }
   </section>
 </div>
 
+<audio id="bgm" src="musica.mp3" loop preload="auto"></audio>
 <div class="music" id="music">
   <button type="button" id="music-btn" aria-pressed="false" aria-label="Activar música">
     <svg class="ic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>
@@ -831,110 +832,57 @@ img { display: block; max-width: 100%; height: auto; }
     }
   });
   update();
-
-  /* ===== Música de caja musical (de ejemplo, generada en el navegador) ===== */
-  const Music = (() => {
-    let ctx = null, master = null, wet = null, step = 0, next = 0, on = false;
-    const E = 60 / 72 / 2;
-    const BARS = [
-      { b: 53, a: [65, 72, 69, 72, 77, 72, 69, 72], m: { 0: 81, 4: 79 } },
-      { b: 52, a: [64, 72, 67, 72, 76, 72, 67, 72], m: { 0: 79, 4: 76 } },
-      { b: 50, a: [62, 69, 65, 69, 74, 69, 65, 69], m: { 0: 77, 4: 76 } },
-      { b: 46, a: [62, 70, 65, 70, 74, 70, 65, 70], m: { 0: 74, 4: 72 } },
-      { b: 53, a: [65, 72, 69, 72, 77, 72, 69, 72], m: { 0: 81, 4: 84 } },
-      { b: 52, a: [64, 72, 67, 72, 76, 72, 67, 72], m: { 0: 79, 2: 76, 4: 79 } },
-      { b: 46, a: [62, 70, 65, 70, 74, 70, 65, 70], m: { 0: 77, 4: 74 } },
-      { b: 48, a: [64, 72, 67, 72, 76, 72, 67, 72], m: { 0: 76, 4: 72 } }
-    ];
-    const hz = m => 440 * Math.pow(2, (m - 69) / 12);
-    function tine(t, m, v) {
-      [[1, v, 2.4], [2, v * .22, .7], [5.4, v * .05, .12]].forEach(([mul, g0, dur]) => {
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.type = 'sine';
-        o.frequency.value = hz(m) * mul;
-        g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(g0, t + 0.006);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-        o.connect(g); g.connect(master); g.connect(wet);
-        o.start(t); o.stop(t + dur + 0.05);
-      });
-    }
-    function loop() {
-      if (!on || !ctx) return;
-      while (next < ctx.currentTime + 0.25) {
-        const bar = BARS[Math.floor(step / 8) % BARS.length], i = step % 8;
-        if (i === 0) tine(next, bar.b, 0.15);
-        tine(next + Math.random() * 0.006, bar.a[i], i % 2 ? 0.06 : 0.09);
-        if (bar.m[i]) tine(next, bar.m[i], 0.13);
-        next += E;
-        step++;
-      }
-    }
-    function start() {
-      if (ctx) { resume(); return true; }
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return false;
-      try {
-        try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* sin soporte */ }
-        ctx = new AC();
-        master = ctx.createGain();
-        const comp = ctx.createDynamicsCompressor();
-        master.connect(comp); comp.connect(ctx.destination);
-        master.gain.setValueAtTime(0.0001, ctx.currentTime);
-        master.gain.exponentialRampToValueAtTime(0.5, ctx.currentTime + 2.5);
-        wet = ctx.createGain(); wet.gain.value = 0.32;
-        const dl = ctx.createDelay(1); dl.delayTime.value = 0.31;
-        const fb = ctx.createGain(); fb.gain.value = 0.36;
-        const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2200;
-        wet.connect(dl); dl.connect(lp); lp.connect(fb); fb.connect(dl); lp.connect(master);
-        if (ctx.resume) ctx.resume();
-        on = true;
-        next = ctx.currentTime + 0.15;
-        setInterval(loop, 60);
-        return true;
-      } catch (e) { ctx = null; return false; }
-    }
-    function pause() { on = false; if (ctx) ctx.suspend(); }
-    function resume() { if (!ctx) return; on = true; ctx.resume(); next = Math.max(next, ctx.currentTime + 0.05); }
-    function visibility(hidden) { if (!ctx) return; if (hidden) ctx.suspend(); else if (on) ctx.resume(); }
-    function whenRunning(cb) {
-      if (!ctx) return;
-      if (ctx.state === 'running') cb();
-      ctx.addEventListener('statechange', () => { if (ctx.state === 'running') cb(); });
-    }
-    return { start, pause, resume, visibility, whenRunning };
-  })();
-
-  /* ===== Apertura: el primer toque abre la invitación y enciende la música ===== */
-  const musicBtn = $('music-btn'), gate = $('gate'), cue = $('cue'), root = document.documentElement;
-  let opened = false;
+  /* ===== Música: archivo musica.mp3 (un archivo de audio suena aunque el iPhone esté en silencio) ===== */
+  const audio = $('bgm'), musicBtn = $('music-btn'), gate = $('gate'), cue = $('cue'), root = document.documentElement;
+  const GESTOS = ['click', 'touchend', 'keydown'];
+  let opened = false, wantMusic = true, resumeOnShow = false;
+  audio.volume = 0.8;
   function setBtn(isOn) {
     musicBtn.setAttribute('aria-pressed', String(isOn));
     musicBtn.setAttribute('aria-label', isOn ? 'Pausar música' : 'Activar música');
   }
+  function play() {
+    try {
+      const p = audio.play();
+      return p && p.then ? p : Promise.resolve();
+    } catch (e) { return Promise.reject(e); }
+  }
+  audio.addEventListener('playing', () => {
+    setBtn(true);
+    GESTOS.forEach(t => document.removeEventListener(t, onGesture, true));
+  });
+  audio.addEventListener('pause', () => setBtn(false));
+
   function openInvite() {
     if (opened) return;
     opened = true;
-    if (Music.start()) setBtn(true);
     root.classList.remove('locked');
     gate.classList.add('opened');
     setTimeout(() => { gate.hidden = true; cue.hidden = false; }, reduce ? 0 : 450);
   }
-  gate.addEventListener('click', openInvite);
-  musicBtn.addEventListener('click', e => {
-    e.stopPropagation();
-    if (!opened) { openInvite(); return; }
-    const turnOn = musicBtn.getAttribute('aria-pressed') !== 'true';
-    if (turnOn) Music.resume(); else Music.pause();
-    setBtn(turnOn);
+  // Cualquier toque (o deslizar el dedo) abre la invitación y enciende la música.
+  function onGesture(e) {
+    if (e.target && e.target.closest && e.target.closest('#music-btn')) return;
+    openInvite();
+    if (wantMusic && audio.paused) play().catch(() => {});
+  }
+  GESTOS.forEach(t => document.addEventListener(t, onGesture, true));
+
+  musicBtn.addEventListener('click', () => {
+    openInvite();
+    if (audio.paused) { wantMusic = true; play().catch(() => {}); }
+    else { wantMusic = false; audio.pause(); }
   });
-  document.addEventListener('click', openInvite, { once: true });
-  document.addEventListener('visibilitychange', () => Music.visibility(document.hidden));
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { resumeOnShow = !audio.paused; if (resumeOnShow) audio.pause(); }
+    else if (resumeOnShow && wantMusic) { resumeOnShow = false; play().catch(() => {}); }
+  });
 
   // Los celulares no dejan sonar una página sin un toque. Se intenta igual al cargar:
-  // si el navegador lo permite (algunos computadores), la música parte sola y no hace falta tocar.
+  // si el navegador lo permite, la invitación se abre sola con música.
   root.classList.add('locked');
-  if (Music.start()) Music.whenRunning(openInvite);
+  play().then(openInvite).catch(() => { /* hace falta un toque: se muestra el sello */ });
+
 })();
 </script>
 </body>
