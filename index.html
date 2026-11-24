@@ -29,6 +29,7 @@
   --white: #FFFDFA;
   --wine: #6F1D2B;
   --wine-deep: #4A121D;
+  --wine-hi: #8E3442;
   --olive: #7B7D58;
   --olive-dark: #5F6143;
   --ink: #2E2426;
@@ -48,6 +49,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html.locked, html.locked body { overflow: hidden; }
 body {
   margin: 0;
   background-color: var(--wine-deep);
@@ -167,6 +169,46 @@ img { display: block; max-width: 100%; height: auto; }
   color: var(--ink-soft);
 }
 .cue svg { width: 18px; height: 18px; animation: bob 1.8s ease-in-out infinite; }
+.gate {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--wine);
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.gate .seal {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  border-radius: 48% 52% 50% 50% / 53% 47% 53% 47%;
+  background: radial-gradient(circle at 34% 30%, var(--wine-hi), var(--wine) 55%, var(--wine-deep));
+  color: var(--on-wine);
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  box-shadow: inset 0 0 0 4px rgba(0, 0, 0, .14), inset 0 0 0 7px rgba(255, 255, 255, .08), 0 4px 10px rgba(30, 10, 15, .35);
+}
+.gate .seal::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1px solid var(--wine);
+  border-radius: 50%;
+  opacity: 0;
+  animation: halo 2.4s ease-out infinite;
+}
+@keyframes halo { 0% { transform: scale(.9); opacity: .7; } 100% { transform: scale(1.35); opacity: 0; } }
+.gate-text { font-family: var(--font-hand); font-size: 1.9rem; }
+.gate:focus-visible .seal { outline: 2px solid var(--wine); outline-offset: 5px; }
+.gate.opened { animation: away .45s ease forwards; }
+@keyframes away { to { opacity: 0; transform: scale(.85); } }
 @keyframes bob { 50% { transform: translateY(5px); } }
 
 /* ---------- Plana 2: cuenta regresiva y lugar ---------- */
@@ -375,15 +417,6 @@ img { display: block; max-width: 100%; height: auto; }
 .music .ic-off { display: none; }
 .music button[aria-pressed="false"] .ic-on { display: none; }
 .music button[aria-pressed="false"] .ic-off { display: block; }
-.music-hint {
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: var(--white);
-  color: var(--wine);
-  font-size: .9rem;
-  font-style: italic;
-  box-shadow: 0 4px 12px rgba(30, 10, 15, .2);
-}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -413,6 +446,10 @@ img { display: block; max-width: 100%; height: auto; }
     <p class="cover-date">10.04.2027</p>
     <h1 class="cover-title" id="titulo">¡Nos<br>Casamos!</h1>
     <p class="cover-names">Isidora y Martín</p>
+    <button type="button" class="gate" id="gate">
+      <span class="seal" aria-hidden="true">I&amp;M</span>
+      <span class="gate-text">Toca para abrir</span>
+    </button>
     <svg class="art tower" viewBox="0 0 170 152" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
       <use href="#coupe" x="65" y="35"/>
       <use href="#coupe" x="45" y="62"/><use href="#coupe" x="85" y="62"/>
@@ -421,7 +458,7 @@ img { display: block; max-width: 100%; height: auto; }
       <circle cx="80" cy="26" r="1.6"/><circle cx="88" cy="18" r="1.2"/><circle cx="92" cy="28" r="1.8"/><circle cx="84" cy="10" r="1"/>
       <path d="M58 22 l-4 -4 M112 22 l4 -4 M85 4 v-4"/>
     </svg>
-    <p class="cue" aria-hidden="true">desliza
+    <p class="cue" id="cue" aria-hidden="true" hidden>desliza
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
     </p>
   </section>
@@ -628,7 +665,6 @@ img { display: block; max-width: 100%; height: auto; }
 </div>
 
 <div class="music" id="music">
-  <span class="music-hint" id="music-hint">Toca para escuchar</span>
   <button type="button" id="music-btn" aria-pressed="false" aria-label="Activar música">
     <svg class="ic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>
     <svg class="ic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/><path d="M3 3l18 18"/></svg>
@@ -861,31 +897,44 @@ img { display: block; max-width: 100%; height: auto; }
     function pause() { on = false; if (ctx) ctx.suspend(); }
     function resume() { if (!ctx) return; on = true; ctx.resume(); next = Math.max(next, ctx.currentTime + 0.05); }
     function visibility(hidden) { if (!ctx) return; if (hidden) ctx.suspend(); else if (on) ctx.resume(); }
-    return { start, pause, resume, visibility };
+    function whenRunning(cb) {
+      if (!ctx) return;
+      if (ctx.state === 'running') cb();
+      ctx.addEventListener('statechange', () => { if (ctx.state === 'running') cb(); });
+    }
+    return { start, pause, resume, visibility, whenRunning };
   })();
 
-  const musicBtn = $('music-btn'), hint = $('music-hint');
-  let started = false;
+  /* ===== Apertura: el primer toque abre la invitación y enciende la música ===== */
+  const musicBtn = $('music-btn'), gate = $('gate'), cue = $('cue'), root = document.documentElement;
+  let opened = false;
   function setBtn(isOn) {
     musicBtn.setAttribute('aria-pressed', String(isOn));
     musicBtn.setAttribute('aria-label', isOn ? 'Pausar música' : 'Activar música');
   }
-  function firstStart() {
-    if (started) return;
-    started = true;
-    hint.hidden = true;
+  function openInvite() {
+    if (opened) return;
+    opened = true;
     if (Music.start()) setBtn(true);
+    root.classList.remove('locked');
+    gate.classList.add('opened');
+    setTimeout(() => { gate.hidden = true; cue.hidden = false; }, reduce ? 0 : 450);
   }
+  gate.addEventListener('click', openInvite);
   musicBtn.addEventListener('click', e => {
     e.stopPropagation();
-    if (!started) { firstStart(); return; }
+    if (!opened) { openInvite(); return; }
     const turnOn = musicBtn.getAttribute('aria-pressed') !== 'true';
     if (turnOn) Music.resume(); else Music.pause();
     setBtn(turnOn);
   });
-  // La música parte con el primer toque en cualquier parte de la invitación.
-  document.addEventListener('click', firstStart, { once: true });
+  document.addEventListener('click', openInvite, { once: true });
   document.addEventListener('visibilitychange', () => Music.visibility(document.hidden));
+
+  // Los celulares no dejan sonar una página sin un toque. Se intenta igual al cargar:
+  // si el navegador lo permite (algunos computadores), la música parte sola y no hace falta tocar.
+  root.classList.add('locked');
+  if (Music.start()) Music.whenRunning(openInvite);
 })();
 </script>
 </body>
