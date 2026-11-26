@@ -178,9 +178,30 @@ img { display: block; max-width: 100%; height: auto; }
   justify-content: center;
   align-items: flex-start;
   gap: 6px;
-  padding-block: 80px 190px;
+  padding-block: 60px 260px;
   text-align: left;
 }
+.cover-photo {
+  position: relative;
+  width: min(84%, 360px);
+  margin: 0 0 24px 4px;
+  padding: 8px;
+  background: var(--white);
+  box-shadow: 0 8px 20px rgba(30, 20, 15, .22);
+  transform: rotate(-2.5deg);
+}
+.cover-photo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.cover-photo::before, .cover-photo::after {
+  content: "";
+  position: absolute;
+  top: -11px;
+  width: 74px;
+  height: 24px;
+  background: rgba(226, 216, 196, .78);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+}
+.cover-photo::before { left: -16px; transform: rotate(-32deg); }
+.cover-photo::after { right: -16px; transform: rotate(30deg); }
 .cover-date { font-family: var(--font-hand); font-size: 2rem; color: var(--wine); letter-spacing: .06em; }
 .cover-title {
   font-family: var(--font-title);
@@ -192,7 +213,7 @@ img { display: block; max-width: 100%; height: auto; }
   margin-block: 14px 18px;
 }
 .cover-names { font-family: var(--font-title); font-size: clamp(1.7rem, 8vw, 2.2rem); color: var(--wine); padding-left: 6px; }
-.cover .tower { position: absolute; right: 2px; bottom: 92px; width: min(52%, 230px); }
+.cover .tower { position: absolute; right: 2px; bottom: 74px; width: min(46%, 200px); }
 .cover .sparkle { position: absolute; color: var(--wine); width: 26px; }
 .cover .s1 { top: 70px; right: 26%; }
 .cover .s2 { top: 130px; right: 12%; width: 18px; }
@@ -378,6 +399,8 @@ img { display: block; max-width: 100%; height: auto; }
 .tw2 { right: 1%; top: 236px; width: 60%; transform: rotate(6deg); }
 .collage .bottle { position: absolute; left: 4%; bottom: 6px; width: 46px; transform: rotate(-12deg); }
 .collage .glass { position: absolute; right: 6%; top: 8px; width: 40px; transform: rotate(10deg); }
+.collage.solo { height: auto; padding-block: 34px 30px; }
+.collage.solo .torn-wrap { position: relative; width: 74%; margin: 0 auto; transform: rotate(-4deg); }
 .collage .art path, .collage .art rect { fill: var(--white); }
 .collage .art .nofill { fill: none; }
 
@@ -508,6 +531,11 @@ img { display: block; max-width: 100%; height: auto; }
   transform: rotate(var(--r, -2deg));
 }
 .polaroid img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.fan { position: relative; width: min(90%, 340px); aspect-ratio: 340 / 420; }
+.fan .polaroid { position: absolute; width: 54%; padding: 8px 8px 30px; }
+.fan .f1 { left: 0; top: 0; --r: -7deg; }
+.fan .f2 { right: 0; top: 10%; --r: 6deg; }
+.fan .f3 { left: 23%; bottom: 0; --r: -2deg; }
 .dots { display: flex; justify-content: center; gap: 10px; margin-top: 6px; }
 .dots button { width: 10px; height: 10px; padding: 0; border: 1px solid var(--wine); border-radius: 50%; background: transparent; cursor: pointer; }
 .dots button[aria-current="true"] { background: var(--wine); }
@@ -590,12 +618,13 @@ img { display: block; max-width: 100%; height: auto; }
 </div>
 
 <div class="app">
-  <p class="proto"><b>Vista previa</b>Las fotos, el teléfono y los datos bancarios son de ejemplo.</p>
+  <p class="proto"><b>Vista previa</b>El teléfono y los datos bancarios son de ejemplo.</p>
 
   <!-- Plana 1 -->
   <section class="plana cover paper" aria-labelledby="titulo">
     <svg class="art sparkle s1" viewBox="-8 -8 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><use href="#star"/></svg>
     <svg class="art sparkle s2" viewBox="-8 -8 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><use href="#star"/></svg>
+    <figure class="cover-photo"><img src="img/portada.jpg" alt="Isidora y Martín, foto en blanco y negro" width="1200" height="800"></figure>
     <p class="cover-date">10.04.2027</p>
     <h1 class="cover-title" id="titulo">¡Nos<br>Casamos!</h1>
     <p class="cover-names">Isidora y Martín</p>
@@ -644,12 +673,11 @@ img { display: block; max-width: 100%; height: auto; }
 
   <!-- Plana 3 -->
   <section class="plana stripes" aria-label="Fotos de Isidora y Martín">
-    <div class="collage">
+    <div class="collage solo">
       <svg class="art glass" viewBox="0 0 40 80" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
         <path d="M6 4 H34 Q36 26 20 34 Q4 26 6 4 Z"/><path class="nofill" d="M8 16 H32"/><path class="nofill" d="M20 34 V68"/><path class="nofill" d="M10 70 H30"/>
       </svg>
-      <figure class="torn-wrap tw1"><div class="torn"><img src="img/juntos-1.jpg" alt="Isidora y Martín abrazados en la playa (foto de ejemplo)" width="1000" height="1333"></div></figure>
-      <figure class="torn-wrap tw2"><div class="torn"><img src="img/juntos-2.jpg" alt="Isidora y Martín en el bosque (foto de ejemplo)" width="1000" height="1333" loading="lazy"></div></figure>
+      <figure class="torn-wrap tw1"><div class="torn"><img src="img/juntos.jpg" alt="Isidora y Martín, selfie bajo el cielo azul" width="750" height="1000" loading="lazy"></div></figure>
       <svg class="art bottle" viewBox="0 0 34 112" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
         <path d="M13 2 H21 V26 Q31 34 31 46 V104 Q31 107 28 107 H6 Q3 107 3 104 V46 Q3 34 13 26 Z"/><rect x="7" y="58" width="20" height="26" rx="1"/><path class="nofill" d="M13 10 H21"/>
       </svg>
@@ -782,23 +810,40 @@ img { display: block; max-width: 100%; height: auto; }
     <div class="slides" id="slides" tabindex="0">
       <div class="slide" style="--r:-2deg;--r2:4deg">
         <h3>Cuando empezamos</h3>
-        <div class="stack"><figure class="polaroid"><img src="img/empezamos.jpg" alt="Cuando empezamos (foto de ejemplo)" width="1000" height="1500" loading="lazy"></figure></div>
+        <div class="stack"><figure class="polaroid"><img src="img/empezamos.jpg" alt="Isidora y Martín cuando empezaron, una selfie al aire libre" width="800" height="1000" loading="lazy"></figure></div>
       </div>
-      <div class="slide" style="--r:2deg;--r2:-4deg">
+      <div class="slide">
         <h3>Muchos viajes</h3>
-        <div class="stack"><figure class="polaroid"><img src="img/viajes.jpg" alt="Muchos viajes (foto de ejemplo)" width="1000" height="1500" loading="lazy"></figure></div>
+        <div class="fan">
+          <figure class="polaroid f1"><img src="img/viajes-1.jpg" alt="En un bote en el mar" width="600" height="750" loading="lazy"></figure>
+          <figure class="polaroid f2"><img src="img/viajes-3.jpg" alt="Junto a un molino" width="600" height="750" loading="lazy"></figure>
+          <figure class="polaroid f3"><img src="img/viajes-2.jpg" alt="Frente a la Torre Eiffel" width="600" height="750" loading="lazy"></figure>
+        </div>
       </div>
       <div class="slide" style="--r:-1.5deg;--r2:3.5deg">
         <h3>La propuesta</h3>
-        <div class="stack"><figure class="polaroid"><img src="img/propuesta.jpg" alt="La propuesta (foto de ejemplo)" width="1000" height="1500" loading="lazy"></figure></div>
+        <div class="stack"><figure class="polaroid"><img src="img/propuesta.jpg" alt="Isidora muestra su anillo de compromiso junto a Martín" width="800" height="1000" loading="lazy"></figure></div>
       </div>
       <div class="slide" style="--r:2.5deg;--r2:-3deg">
         <h3>Nuestra casa</h3>
-        <div class="stack"><figure class="polaroid"><img src="img/casa.jpg" alt="Nuestra casa (foto de ejemplo)" width="1000" height="1500" loading="lazy"></figure></div>
+        <div class="stack"><figure class="polaroid"><img src="img/casa.jpg" alt="Isidora y Martín en su casa, junto al árbol de Navidad" width="800" height="1000" loading="lazy"></figure></div>
       </div>
     </div>
     <div class="dots" id="dots" role="group" aria-label="Elegir foto"></div>
     <p class="swipe">desliza para ver más</p>
+  </section>
+
+  <section class="plana stripes" aria-label="Más fotos de Isidora y Martín">
+    <div class="collage">
+      <svg class="art glass" viewBox="0 0 40 80" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M6 4 H34 Q36 26 20 34 Q4 26 6 4 Z"/><path class="nofill" d="M8 16 H32"/><path class="nofill" d="M20 34 V68"/><path class="nofill" d="M10 70 H30"/>
+      </svg>
+      <figure class="torn-wrap tw1"><div class="torn"><img src="img/extra-1.jpg" alt="Isidora y Martín en las dunas al atardecer" width="750" height="1000" loading="lazy"></div></figure>
+      <figure class="torn-wrap tw2"><div class="torn"><img src="img/extra-2.jpg" alt="Isidora y Martín celebrando con una torta" width="750" height="1000" loading="lazy"></div></figure>
+      <svg class="art bottle" viewBox="0 0 34 112" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M13 2 H21 V26 Q31 34 31 46 V104 Q31 107 28 107 H6 Q3 107 3 104 V46 Q3 34 13 26 Z"/><rect x="7" y="58" width="20" height="26" rx="1"/><path class="nofill" d="M13 10 H21"/>
+      </svg>
+    </div>
   </section>
 
   <!-- Plana 7 -->
