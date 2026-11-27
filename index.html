@@ -1006,11 +1006,12 @@ img { display: block; max-width: 100%; height: auto; }
   const slides = $('slides'), dotsBox = $('dots');
   const slideEls = Array.from(slides.children);
   const AUTO_MS = 3500;                       // tiempo que se ve cada foto
-  let enVista = false, tocando = false, pausaHasta = 0;
+  let enVista = false, tocando = false, pausaHasta = 0, pos = 0, finScroll = null;
   const actual = () => Math.round(slides.scrollLeft / Math.max(1, slides.clientWidth));
   function irA(i) {
     const n = slideEls.length;
-    slides.scrollTo({ left: (((i % n) + n) % n) * slides.clientWidth, behavior: reduce ? 'auto' : 'smooth' });
+    pos = ((i % n) + n) % n;                      // la foto pedida, aunque el desplazamiento siga en curso
+    slides.scrollTo({ left: pos * slides.clientWidth, behavior: reduce ? 'auto' : 'smooth' });
   }
   const pausa = ms => { pausaHasta = Math.max(pausaHasta, Date.now() + ms); };
   function manual(i) { pausa(7000); irA(i); }     // si alguien elige una foto, se queda en ella un rato
@@ -1026,13 +1027,17 @@ img { display: block; max-width: 100%; height: auto; }
     const i = actual();
     dots.forEach((d, k) => d.setAttribute('aria-current', String(k === i)));
   }
-  slides.addEventListener('scroll', () => requestAnimationFrame(markDot), { passive: true });
-  $('prev').addEventListener('click', () => manual(actual() - 1));
-  $('next').addEventListener('click', () => manual(actual() + 1));
+  slides.addEventListener('scroll', () => {
+    requestAnimationFrame(markDot);
+    clearTimeout(finScroll);
+    finScroll = setTimeout(() => { pos = actual(); }, 160);   // si deslizaron con el dedo, toma esa foto
+  }, { passive: true });
+  $('prev').addEventListener('click', () => manual(pos - 1));
+  $('next').addEventListener('click', () => manual(pos + 1));
   slides.addEventListener('keydown', e => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     e.preventDefault();
-    manual(actual() + (e.key === 'ArrowRight' ? 1 : -1));
+    manual(pos + (e.key === 'ArrowRight' ? 1 : -1));
   });
   // Mientras haya un dedo (o el mouse) sobre la foto, no avanza; al soltar espera un poco antes de seguir.
   const suelta = () => { if (tocando) { tocando = false; pausa(3000); } };
@@ -1047,7 +1052,7 @@ img { display: block; max-width: 100%; height: auto; }
       if (enVista) pausa(1500);                 // al llegar, deja ver la primera foto antes de pasar
     }, { threshold: 0.5 }).observe(slides);
     setInterval(() => {
-      if (enVista && !tocando && !document.hidden && Date.now() > pausaHasta) irA(actual() + 1);
+      if (enVista && !tocando && !document.hidden && Date.now() > pausaHasta) irA(pos + 1);
     }, AUTO_MS);
   }
   markDot();
