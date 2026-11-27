@@ -178,8 +178,37 @@ img { display: block; max-width: 100%; height: auto; }
   justify-content: center;
   align-items: flex-start;
   gap: 6px;
-  padding-block: 60px 260px;
+  padding-block: 56px 64px;
   text-align: left;
+}
+.cover-bottom {
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+.cover-strip {
+  position: relative;
+  flex: none;
+  width: min(23%, 100px);
+  margin: -58% 5% 10px 0;   /* sube junto al nombre y al título, en el lado derecho que queda libre */
+  padding: 5px;
+  background: var(--white);
+  box-shadow: 0 10px 22px rgba(30, 20, 15, .28);
+  transform: rotate(7deg);
+}
+.cover-strip::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 66px;
+  height: 22px;
+  transform: translateX(-50%) rotate(5deg);
+  background: rgba(226, 216, 196, .8);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
 }
 .cover-photo {
   position: relative;
@@ -213,7 +242,7 @@ img { display: block; max-width: 100%; height: auto; }
   margin-block: 14px 18px;
 }
 .cover-names { font-family: var(--font-title); font-size: clamp(1.7rem, 8vw, 2.2rem); color: var(--wine); padding-left: 6px; }
-.cover .tower { position: absolute; right: 2px; bottom: 74px; width: min(46%, 200px); }
+.cover .tower { flex: none; width: min(52%, 220px); margin-bottom: 6px; }
 .cover .sparkle { position: absolute; color: var(--wine); width: 26px; }
 .cover .s1 { top: 70px; right: 26%; }
 .cover .s2 { top: 130px; right: 12%; width: 18px; }
@@ -379,7 +408,8 @@ img { display: block; max-width: 100%; height: auto; }
 .p2 .chandelier { width: 150px; margin-block: 6px; }
 .when { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .when-time { font-family: var(--font-hand); font-size: 2.6rem; line-height: 1.1; color: var(--wine); }
-.when-place { font-size: 1.2rem; }
+.when-place { font-size: 1.25rem; font-weight: 500; }
+.when-addr { font-size: 1.05rem; line-height: 1.4; color: var(--ink-soft); }
 .agenda { font-size: .95rem; color: var(--ink-soft); }
 .agenda a { color: var(--wine); text-underline-offset: 3px; }
 .agenda a:focus-visible { outline: 2px solid var(--wine); outline-offset: 2px; }
@@ -550,11 +580,11 @@ img { display: block; max-width: 100%; height: auto; }
   transform: rotate(var(--r, -2deg));
 }
 .polaroid img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
-.fan { position: relative; width: min(90%, 340px); aspect-ratio: 340 / 420; }
-.fan .polaroid { position: absolute; width: 54%; padding: 8px 8px 30px; }
+.fan { position: relative; width: min(90%, 340px); aspect-ratio: 340 / 470; }
+.fan .polaroid { position: absolute; width: 52%; padding: 8px 8px 30px; }
 .fan .f1 { left: 0; top: 0; --r: -7deg; }
-.fan .f2 { right: 0; top: 10%; --r: 6deg; }
-.fan .f3 { left: 23%; bottom: 0; --r: -2deg; }
+.fan .f2 { right: 0; top: 7%; --r: 6deg; }
+.fan .f3 { left: 24%; bottom: 0; --r: -2deg; }
 .dots { display: flex; justify-content: center; gap: 10px; margin-top: 6px; }
 .dots button { width: 10px; height: 10px; padding: 0; border: 1px solid var(--wine); border-radius: 50%; background: transparent; cursor: pointer; }
 .dots button[aria-current="true"] { background: var(--wine); }
@@ -647,6 +677,7 @@ img { display: block; max-width: 100%; height: auto; }
     <p class="cover-date">10.04.2027</p>
     <h1 class="cover-title" id="titulo">¡Nos<br>Casamos!</h1>
     <p class="cover-names">Isidora y Martín</p>
+    <div class="cover-bottom">
     <svg class="art tower" viewBox="0 0 170 152" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
       <use href="#coupe" x="65" y="35"/>
       <use href="#coupe" x="45" y="62"/><use href="#coupe" x="85" y="62"/>
@@ -655,6 +686,8 @@ img { display: block; max-width: 100%; height: auto; }
       <circle cx="80" cy="26" r="1.6"/><circle cx="88" cy="18" r="1.2"/><circle cx="92" cy="28" r="1.8"/><circle cx="84" cy="10" r="1"/>
       <path d="M58 22 l-4 -4 M112 22 l4 -4 M85 4 v-4"/>
     </svg>
+    <figure class="cover-strip"><img src="img/tira.jpg" alt="Tira de tres fotos en blanco y negro de Isidora y Martín" width="300" height="1137"></figure>
+    </div>
     <p class="cue" aria-hidden="true">desliza
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
     </p>
@@ -681,7 +714,8 @@ img { display: block; max-width: 100%; height: auto; }
     </svg>
     <div class="when">
       <p class="when-time">16:30 hrs.</p>
-      <p class="when-place">Parque Lo Arcaya, Pirque, RM.</p>
+      <p class="when-place">Parque Lo Arcaya</p>
+      <p class="when-addr">Av. Hernán Prieto 4829, Pirque,<br>Región Metropolitana</p>
     </div>
     <div class="pills">
       <a class="pill" id="waze" href="https://waze.com/" target="_blank" rel="noopener">Waze</a>
@@ -690,21 +724,7 @@ img { display: block; max-width: 100%; height: auto; }
     <p class="agenda">Agregar al calendario: <a id="cal-link" href="https://calendar.google.com/" target="_blank" rel="noopener">Google</a> · <a href="martin-isidora.ics" type="text/calendar">iPhone</a></p>
   </section>
 
-  <!-- Plana 3 -->
-  <section class="plana stripes" aria-label="Fotos de Isidora y Martín">
-    <div class="collage">
-      <svg class="art glass" viewBox="0 0 40 80" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-        <path d="M6 4 H34 Q36 26 20 34 Q4 26 6 4 Z"/><path class="nofill" d="M8 16 H32"/><path class="nofill" d="M20 34 V68"/><path class="nofill" d="M10 70 H30"/>
-      </svg>
-      <figure class="torn-wrap tw1"><div class="torn"><img src="img/juntos.jpg" alt="Isidora y Martín, selfie bajo el cielo azul" width="750" height="1000" loading="lazy"></div></figure>
-      <figure class="torn-wrap tw2"><div class="torn"><img src="img/juntos-2.jpg" alt="Isidora abraza a Martín y apoya su mejilla en la de él" width="750" height="1000" loading="lazy"></div></figure>
-      <svg class="art bottle" viewBox="0 0 34 112" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-        <path d="M13 2 H21 V26 Q31 34 31 46 V104 Q31 107 28 107 H6 Q3 107 3 104 V46 Q3 34 13 26 Z"/><rect x="7" y="58" width="20" height="26" rx="1"/><path class="nofill" d="M13 10 H21"/>
-      </svg>
-    </div>
-  </section>
-
-  <section class="plana p3-day white" aria-labelledby="gran-dia">
+  <section class="plana p3-day paper" aria-labelledby="gran-dia">
     <h2 class="title" id="gran-dia">El gran día...</h2>
     <ol class="zig">
       <li>
@@ -728,6 +748,34 @@ img { display: block; max-width: 100%; height: auto; }
         <time datetime="03:00">3:00 hrs</time><span class="ev">Vuelta a casa</span>
       </li>
     </ol>
+  </section>
+
+  <!-- Plana 6 -->
+  <section class="plana p6 white" aria-label="Nuestra historia en fotos">
+    <div class="slides" id="slides" tabindex="0">
+      <div class="slide" style="--r:-2deg;--r2:4deg">
+        <h3>Cuando empezamos</h3>
+        <div class="stack"><figure class="polaroid"><img src="img/empezamos.jpg" alt="Isidora y Martín cuando empezaron, una selfie al aire libre" width="800" height="1000" loading="lazy"></figure></div>
+      </div>
+      <div class="slide">
+        <h3>Muchos viajes</h3>
+        <div class="fan">
+          <figure class="polaroid f1"><img src="img/viajes-1.jpg" alt="En un bote en el mar" width="600" height="750" loading="lazy"></figure>
+          <figure class="polaroid f2"><img src="img/viajes-3.jpg" alt="En las Torres del Paine" width="600" height="750" loading="lazy"></figure>
+          <figure class="polaroid f3"><img src="img/viajes-2.jpg" alt="Frente a la Torre Eiffel" width="600" height="750" loading="lazy"></figure>
+        </div>
+      </div>
+      <div class="slide" style="--r:-1.5deg;--r2:3.5deg">
+        <h3>La propuesta</h3>
+        <div class="stack"><figure class="polaroid"><img src="img/propuesta.jpg" alt="Isidora muestra su anillo de compromiso junto a Martín" width="800" height="1000" loading="lazy"></figure></div>
+      </div>
+      <div class="slide" style="--r:2.5deg;--r2:-3deg">
+        <h3>Nuestra casa</h3>
+        <div class="stack"><figure class="polaroid"><img src="img/casa.jpg" alt="Isidora y Martín en su casa, junto al árbol de Navidad" width="800" height="1000" loading="lazy"></figure></div>
+      </div>
+    </div>
+    <div class="dots" id="dots" role="group" aria-label="Elegir foto"></div>
+    <p class="swipe">desliza para ver más</p>
   </section>
 
   <!-- Plana 4 -->
@@ -828,34 +876,6 @@ img { display: block; max-width: 100%; height: auto; }
       <p id="gracias-texto">Recibimos tu confirmación.</p>
       <button type="button" class="link-btn" id="otra">Enviar otra respuesta</button>
     </div>
-  </section>
-
-  <!-- Plana 6 -->
-  <section class="plana p6 white" aria-label="Nuestra historia en fotos">
-    <div class="slides" id="slides" tabindex="0">
-      <div class="slide" style="--r:-2deg;--r2:4deg">
-        <h3>Cuando empezamos</h3>
-        <div class="stack"><figure class="polaroid"><img src="img/empezamos.jpg" alt="Isidora y Martín cuando empezaron, una selfie al aire libre" width="800" height="1000" loading="lazy"></figure></div>
-      </div>
-      <div class="slide">
-        <h3>Muchos viajes</h3>
-        <div class="fan">
-          <figure class="polaroid f1"><img src="img/viajes-1.jpg" alt="En un bote en el mar" width="600" height="750" loading="lazy"></figure>
-          <figure class="polaroid f2"><img src="img/viajes-3.jpg" alt="Junto a un molino" width="600" height="750" loading="lazy"></figure>
-          <figure class="polaroid f3"><img src="img/viajes-2.jpg" alt="Frente a la Torre Eiffel" width="600" height="750" loading="lazy"></figure>
-        </div>
-      </div>
-      <div class="slide" style="--r:-1.5deg;--r2:3.5deg">
-        <h3>La propuesta</h3>
-        <div class="stack"><figure class="polaroid"><img src="img/propuesta.jpg" alt="Isidora muestra su anillo de compromiso junto a Martín" width="800" height="1000" loading="lazy"></figure></div>
-      </div>
-      <div class="slide" style="--r:2.5deg;--r2:-3deg">
-        <h3>Nuestra casa</h3>
-        <div class="stack"><figure class="polaroid"><img src="img/casa.jpg" alt="Isidora y Martín en su casa, junto al árbol de Navidad" width="800" height="1000" loading="lazy"></figure></div>
-      </div>
-    </div>
-    <div class="dots" id="dots" role="group" aria-label="Elegir foto"></div>
-    <p class="swipe">desliza para ver más</p>
   </section>
 
   <section class="plana stripes" aria-label="Más fotos de Isidora y Martín">
