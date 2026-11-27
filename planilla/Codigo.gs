@@ -136,8 +136,17 @@ function hoja_(ss, nombre, encabezados) {
 function onEdit(e) {
   const sh = e.range.getSheet();
   if (sh.getName() !== 'Invitados' || e.range.getRow() < 2) return;
-  if (e.range.getColumn() > 2 || e.range.getLastColumn() < 2) return;
-  codigosFaltantes();
+  const c1 = e.range.getColumn(), c2 = e.range.getLastColumn();
+  if (c1 <= 5 && c2 >= 5) arreglaTelefonos_(sh.getRange(e.range.getRow(), 5, e.range.getNumRows(), 1));
+  if (c1 <= 2 && c2 >= 2) codigosFaltantes();
+}
+
+// Un teléfono escrito como "+56 9 ..." se lee como fórmula: lo dejamos como texto.
+function arreglaTelefonos_(rg) {
+  const f = rg.getFormulas();
+  if (!f.some(r => r[0])) return;
+  const v = rg.getDisplayValues();
+  rg.setNumberFormat('@').setValues(f.map((r, i) => [r[0] ? r[0].replace(/^=/, '') : v[i][0]]));
 }
 
 function codigosFaltantes() {
@@ -200,7 +209,7 @@ function doPost(e) {
     const clave = (codigo + '|' + nombre).toLowerCase();
     const j = prev.findIndex(v => (String(v[1]) + '|' + String(v[4])).toLowerCase() === clave);
     if (j >= 0) conf.getRange(j + 2, 1, 1, fila.length).setValues([fila]);
-    else conf.appendRow(fila);
+    else conf.getRange(conf.getLastRow() + 1, 1, 1, fila.length).setValues([fila]);
 
     if (inv) actualizaInvitado_(ss, codigo, inv.fila);
     return json_({ ok: true });
