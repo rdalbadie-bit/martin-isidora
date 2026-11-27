@@ -296,11 +296,15 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .folds { position: absolute; inset: 0; width: 100%; height: 100%; }
 .folds polyline { fill: none; stroke: rgba(46, 36, 38, .14); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.env-to small { display: block; font-size: .55em; line-height: 1; }
+.env-to.largo { font-size: calc(var(--envw) * .065); }
 .env-to {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 9%;
+  padding-inline: 8%;
+  line-height: 1.1;
   text-align: center;
   font-family: var(--font-hand);
   font-size: calc(var(--envw) * .085);
@@ -490,6 +494,23 @@ img { display: block; max-width: 100%; height: auto; }
 .form-error { color: var(--wine); font-style: italic; text-align: center; }
 .rsvp .pill { justify-self: center; min-width: 180px; margin-top: 8px; }
 .note { font-size: .92rem; color: var(--ink-soft); text-align: center; }
+.rsvp .pill:disabled { opacity: .6; cursor: wait; }
+.seats { font-style: italic; color: var(--wine); text-wrap: balance; }
+.gracias {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  width: 100%;
+  max-width: 380px;
+  margin-top: 8px;
+  padding: 26px 22px;
+  border-radius: 4px;
+  background: var(--white);
+  text-align: center;
+}
+.gracias:focus { outline: none; }
+.link-btn { padding: 4px; border: 0; background: none; color: var(--wine); font: inherit; font-size: .95rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.link-btn:focus-visible { outline: 2px solid var(--wine); outline-offset: 2px; }
 
 /* ---------- Plana 6: fotos en polaroid ---------- */
 .p6 { padding-inline: 0; }
@@ -605,7 +626,7 @@ img { display: block; max-width: 100%; height: auto; }
       <div class="env-front">
         <div class="env-front-shape">
           <svg class="folds" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><polyline points="0,100 50,49 100,100"/></svg>
-          <span class="env-to" aria-hidden="true">Para ti</span>
+          <span class="env-to" id="env-to" aria-hidden="true">Para ti</span>
         </div>
       </div>
       <div class="flap"><div class="flap-shape"></div></div>
@@ -616,7 +637,7 @@ img { display: block; max-width: 100%; height: auto; }
 </div>
 
 <div class="app">
-  <p class="proto"><b>Vista previa</b>El teléfono y los datos bancarios son de ejemplo.</p>
+  <p class="proto"><b>Vista previa</b>Los datos bancarios son de ejemplo.</p>
 
   <!-- Plana 1 -->
   <section class="plana cover paper" aria-labelledby="titulo">
@@ -756,6 +777,7 @@ img { display: block; max-width: 100%; height: auto; }
     </svg>
     <h2 class="title" id="vienes">¡Solo faltas tú! ¿Vienes?</h2>
     <p class="caps">Recuerda completar este formulario.<br>Por favor hazlo antes del 8 de febrero del&nbsp;2027.</p>
+    <p class="seats" id="seats" hidden></p>
 
     <form class="rsvp" id="rsvp" novalidate>
       <fieldset class="yn">
@@ -777,9 +799,11 @@ img { display: block; max-width: 100%; height: auto; }
           <label class="sr" for="f-dieta-otro">¿Cuál alergia o restricción?</label>
           <input type="text" id="f-dieta-otro" placeholder="Cuéntanos cuál" hidden>
 
+          <div id="pareja-wrap" style="display:grid;gap:12px">
           <p class="sub">Si fuiste invitado con pareja</p>
           <label class="sr" for="f-pareja">Nombre completo de tu pareja</label>
           <input type="text" id="f-pareja" placeholder="Escribe su nombre completo">
+          </div>
           <div id="pareja-block" style="display:grid;gap:12px" hidden>
             <label class="sr" for="f-pareja-dieta">Alergia o restricción alimentaria de tu pareja</label>
             <select id="f-pareja-dieta" class="empty">
@@ -795,13 +819,15 @@ img { display: block; max-width: 100%; height: auto; }
         </div>
       </div>
 
-      <p class="form-error" id="f-error" role="alert" hidden>Escribe tu nombre completo para que sepamos quién responde.</p>
-      <a class="pill" id="send" href="https://wa.me/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.2A8 8 0 1 1 20 11.5z"/></svg>
-        Enviar
-      </a>
-      <p class="note">Al tocar Enviar se abre WhatsApp con tus respuestas ya escritas; solo falta mandar el mensaje.</p>
+      <p class="form-error" id="f-error" role="alert" hidden></p>
+      <button type="submit" class="pill" id="send">Enviar</button>
+      <p class="note">Tu respuesta les llega directo a Isidora y Martín.</p>
     </form>
+    <div class="gracias" id="gracias" tabindex="-1" role="status" hidden>
+      <p class="title" id="gracias-titulo">¡Gracias!</p>
+      <p id="gracias-texto">Recibimos tu confirmación.</p>
+      <button type="button" class="link-btn" id="otra">Enviar otra respuesta</button>
+    </div>
   </section>
 
   <!-- Plana 6 -->
@@ -876,7 +902,9 @@ img { display: block; max-width: 100%; height: auto; }
     zonaHoraria: 'America/Santiago',
     calendario: { inicio: '20270410T163000', fin: '20270411T030000' },
     lugar: { nombre: 'Parque Lo Arcaya', direccion: 'Av. Hernán Prieto 4829, Pirque, Región Metropolitana' },
-    whatsapp: '56900000000'                          // EJEMPLO: número que recibe las confirmaciones
+    // Planilla de Google "Matrimonio Isidora y Martín - Invitados y confirmaciones" (aplicación web):
+    // da el nombre del invitado según su código (?i=...) y guarda las confirmaciones.
+    api: 'https://script.google.com/macros/s/AKfycbwIhCF1jyf85uTxaTh8OkXzsY4yOnXeptWwI8x9eJTtniioYexLIlkbC8urvcnQxWETnw/exec'
   };
 
   const $ = id => document.getElementById(id);
@@ -971,58 +999,117 @@ img { display: block; max-width: 100%; height: auto; }
     try { navigator.clipboard.writeText(text).then(() => say('Copiado'), fallback); } catch (e) { fallback(); }
   });
 
-  /* ===== Confirmación por WhatsApp ===== */
-  const form = $('rsvp'), send = $('send'), nombre = $('f-nombre');
-  const dieta = (sel, otro) => sel.value === 'Otro' ? ('Otro: ' + (otro.value.trim() || 'sin detalle')) : (sel.value || 'Sin indicar');
+  /* ===== Invitado personalizado: el link trae ?i=código y la planilla devuelve su nombre ===== */
+  const codigo = (new URLSearchParams(location.search).get('i') || '').trim().toLowerCase().slice(0, 20);
+  function aplicaInvitado(g) {
+    const to = $('env-to');
+    if (g && g.nombre) {
+      to.textContent = '';
+      const s = document.createElement('small');
+      s.textContent = 'Para';
+      to.appendChild(s);
+      to.appendChild(document.createTextNode(g.nombre));
+      to.classList.toggle('largo', g.nombre.length > 18);
+    }
+    if (g && g.cupos) {
+      const plural = g.cupos > 1;
+      $('seats').textContent = 'Reservamos ' + g.cupos + (plural ? ' lugares para ustedes.' : ' lugar para ti.') +
+        (g.cupos > 2 ? ' Cada persona o pareja puede completar su propio formulario.' : '');
+      $('seats').hidden = false;
+      $('pareja-wrap').hidden = g.cupos < 2;
+      update();
+    }
+    to.style.visibility = '';
+  }
+  if (codigo && CONFIG.api) {
+    $('env-to').style.visibility = 'hidden';
+    const ctrl = window.AbortController ? new AbortController() : null;
+    const espera = setTimeout(() => { if (ctrl) ctrl.abort(); }, 8000);
+    fetch(CONFIG.api + '?id=' + enc(codigo), ctrl ? { signal: ctrl.signal } : {})
+      .then(r => r.json())
+      .then(j => aplicaInvitado(j && j.ok ? { nombre: String(j.nombre || ''), cupos: Number(j.cupos) || 0 } : null))
+      .catch(() => aplicaInvitado(null))
+      .then(() => clearTimeout(espera));
+  }
+
+  /* ===== Confirmación: se guarda en la planilla ===== */
+  const form = $('rsvp'), send = $('send'), nombre = $('f-nombre'), err = $('f-error');
+  const dieta = (sel, otro) => sel.value === 'Otro' ? ('Otro: ' + (otro.value.trim() || 'sin detalle')) : sel.value;
   function data() {
     const asiste = (form.querySelector('input[name="asiste"]:checked') || {}).value || 'si';
+    const pareja = $('pareja-wrap').hidden ? '' : $('f-pareja').value.trim();
     return {
       asiste,
       nombre: nombre.value.trim(),
       dieta: dieta($('f-dieta'), $('f-dieta-otro')),
-      pareja: $('f-pareja').value.trim(),
-      parejaDieta: dieta($('f-pareja-dieta'), $('f-pareja-otro')),
+      pareja,
+      parejaDieta: pareja ? dieta($('f-pareja-dieta'), $('f-pareja-otro')) : '',
       cancion: $('f-cancion').value.trim()
     };
   }
-  function mensaje(d) {
-    const L = [];
-    if (d.asiste === 'si') {
-      L.push('¡Hola, Isidora y Martín! Confirmo mi asistencia a su matrimonio el sábado 10 de abril.', '');
-      L.push('Nombre: ' + (d.nombre || '—'));
-      L.push('Alergia o restricción alimentaria: ' + d.dieta);
-      if (d.pareja) {
-        L.push('Pareja: ' + d.pareja);
-        L.push('Alergia o restricción de mi pareja: ' + d.parejaDieta);
-      }
-      if (d.cancion) L.push('Canción infaltable: ' + d.cancion);
-    } else {
-      L.push('Hola, Isidora y Martín. Lamentablemente no podré acompañarlos el sábado 10 de abril. ¡Les deseo lo mejor!', '');
-      L.push('Nombre: ' + (d.nombre || '—'));
-    }
-    return L.join('\n');
-  }
   function update() {
-    const d = data();
-    $('si-block').hidden = d.asiste === 'no';
+    const asiste = (form.querySelector('input[name="asiste"]:checked') || {}).value || 'si';
+    $('si-block').hidden = asiste === 'no';
     $('f-dieta-otro').hidden = $('f-dieta').value !== 'Otro';
-    $('pareja-block').hidden = !d.pareja;
+    $('pareja-block').hidden = !$('f-pareja').value.trim();
     $('f-pareja-otro').hidden = $('f-pareja-dieta').value !== 'Otro';
     document.querySelectorAll('.rsvp select').forEach(s => s.classList.toggle('empty', !s.value));
-    send.href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + enc(mensaje(d));
-    if (d.nombre) { $('f-error').hidden = true; nombre.removeAttribute('aria-invalid'); }
   }
-  form.addEventListener('input', update);
-  form.addEventListener('change', update);
-  form.addEventListener('submit', e => { e.preventDefault(); update(); send.focus(); });
-  send.addEventListener('click', e => {
+  function limpiaError() {
+    err.hidden = true;
+    form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+  }
+  function valida(d) {
+    if (!d.nombre) return [nombre, 'Escribe tu nombre completo para que sepamos quién responde.'];
+    if (d.asiste === 'si' && !$('f-dieta').value) return [$('f-dieta'), 'Elige una opción de alimentación. Si no tienes ninguna restricción, elige "Ninguna".'];
+    if (d.asiste === 'si' && d.pareja && !$('f-pareja-dieta').value) return [$('f-pareja-dieta'), 'Elige también la opción de alimentación de tu pareja.'];
+    return null;
+  }
+  function muestraGracias(d) {
+    const pila = d.nombre.split(/\s+/)[0];
+    $('gracias-titulo').textContent = d.asiste === 'si' ? '¡Gracias, ' + pila + '!' : 'Gracias por avisarnos, ' + pila;
+    $('gracias-texto').textContent = d.asiste === 'si'
+      ? 'Recibimos tu confirmación. ¡Nos vemos el 10 de abril!'
+      : 'Recibimos tu respuesta. Te vamos a echar de menos.';
+    form.hidden = true;
+    $('gracias').hidden = false;
+    $('gracias').focus();
+  }
+  let enviando = false;
+  form.addEventListener('input', () => { update(); limpiaError(); });
+  form.addEventListener('change', () => { update(); limpiaError(); });
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (enviando) return;
     update();
-    if (!nombre.value.trim()) {
-      e.preventDefault();
-      $('f-error').hidden = false;
-      nombre.setAttribute('aria-invalid', 'true');
-      nombre.focus();
+    const d = data();
+    const malo = valida(d);
+    if (malo) {
+      err.textContent = malo[1];
+      err.hidden = false;
+      malo[0].setAttribute('aria-invalid', 'true');
+      malo[0].focus();
+      return;
     }
+    enviando = true;
+    send.disabled = true;
+    send.textContent = 'Enviando…';
+    fetch(CONFIG.api, { method: 'POST', body: JSON.stringify(Object.assign({ codigo }, d)) })
+      .then(r => r.json())
+      .then(j => { if (!j || !j.ok) throw new Error((j && j.error) || 'sin respuesta'); muestraGracias(d); })
+      .catch(() => {
+        err.textContent = 'No pudimos guardar tu respuesta. Revisa tu conexión e inténtalo de nuevo.';
+        err.hidden = false;
+      })
+      .then(() => { enviando = false; send.disabled = false; send.textContent = 'Enviar'; });
+  });
+  $('otra').addEventListener('click', () => {
+    form.reset();
+    update();
+    limpiaError();
+    $('gracias').hidden = true;
+    form.hidden = false;
+    nombre.focus();
   });
   update();
   /* ===== Música: archivo musica.mp3 (un archivo de audio suena aunque el iPhone esté en silencio) ===== */
