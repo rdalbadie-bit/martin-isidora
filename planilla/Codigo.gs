@@ -14,7 +14,7 @@
  *  - doPost(respuesta)  -> guarda la confirmación.
  */
 
-const LINK_BASE = 'https://rdalbadie-bit.github.io/martin-isidora/?i=';
+const LINK_BASE = 'https://isidoraymartin.cl/?i=';
 
 const H_INV = ['Código', 'Nombre en el sobre', 'Saludo', 'Cupos', 'Teléfono', 'Link personal',
   'Enviar por WhatsApp', 'Respondió', 'Asiste', 'Personas confirmadas'];
